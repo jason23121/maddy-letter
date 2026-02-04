@@ -46,6 +46,25 @@ let revealArmed = false;
 let revealRunning = false;
 let musicStarted = false;
 
+function getCurrentOffset(el) {
+  const style = window.getComputedStyle(el);
+  const transform = style.transform;
+  if (!transform || transform === "none") {
+    return { x: 0, y: 0 };
+  }
+  const matrixMatch = transform.match(/^matrix\((.+)\)$/);
+  if (matrixMatch) {
+    const parts = matrixMatch[1].split(",").map((part) => parseFloat(part.trim()));
+    return { x: parts[4] || 0, y: parts[5] || 0 };
+  }
+  const matrix3dMatch = transform.match(/^matrix3d\((.+)\)$/);
+  if (matrix3dMatch) {
+    const parts = matrix3dMatch[1].split(",").map((part) => parseFloat(part.trim()));
+    return { x: parts[12] || 0, y: parts[13] || 0 };
+  }
+  return { x: 0, y: 0 };
+}
+
 function startMusic() {
   if (!bgMusic || musicStarted) return;
   const playPromise = bgMusic.play();
@@ -138,14 +157,53 @@ function moveNoButton() {
   const bounds = choices.getBoundingClientRect();
   const btnRect = noBtn.getBoundingClientRect();
   const padding = 6;
+  const escapeBoost = 60;
+  const minDistance = 120;
+  const currentOffset = getCurrentOffset(noBtn);
 
-  const minX = padding - noBase.x;
-  const maxX = bounds.width - btnRect.width - padding - noBase.x;
-  const minY = padding - noBase.y;
-  const maxY = bounds.height - btnRect.height - padding - noBase.y;
+  const minX = padding - noBase.x - escapeBoost;
+  const maxX = bounds.width - btnRect.width - padding - noBase.x + escapeBoost;
+  const minY = padding - noBase.y - escapeBoost;
+  const maxY = bounds.height - btnRect.height - padding - noBase.y + escapeBoost;
 
-  const nextX = randBetween(minX, maxX);
-  const nextY = randBetween(minY, maxY);
+  const maxDistance = Math.max(
+    Math.hypot(minX - currentOffset.x, minY - currentOffset.y),
+    Math.hypot(minX - currentOffset.x, maxY - currentOffset.y),
+    Math.hypot(maxX - currentOffset.x, minY - currentOffset.y),
+    Math.hypot(maxX - currentOffset.x, maxY - currentOffset.y),
+  );
+  const effectiveMin = Math.min(minDistance, maxDistance);
+
+  let nextX = 0;
+  let nextY = 0;
+  let attempts = 0;
+
+  do {
+    nextX = randBetween(minX, maxX);
+    nextY = randBetween(minY, maxY);
+    attempts += 1;
+  } while (
+    attempts < 12 &&
+    Math.hypot(nextX - currentOffset.x, nextY - currentOffset.y) < effectiveMin
+  );
+
+  if (
+    Math.hypot(nextX - currentOffset.x, nextY - currentOffset.y) < effectiveMin
+  ) {
+    const candidates = [
+      { x: minX, y: minY },
+      { x: minX, y: maxY },
+      { x: maxX, y: minY },
+      { x: maxX, y: maxY },
+    ];
+    candidates.sort(
+      (a, b) =>
+        Math.hypot(b.x - currentOffset.x, b.y - currentOffset.y) -
+        Math.hypot(a.x - currentOffset.x, a.y - currentOffset.y),
+    );
+    nextX = candidates[0].x;
+    nextY = candidates[0].y;
+  }
 
   noBtn.style.transform = `translate(${nextX}px, ${nextY}px)`;
 }
