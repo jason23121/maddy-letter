@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Valentine Letter</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cardo:wght@400;700&family=Parisienne&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main class="app">
+      <section class="page page-one" id="page-one">
+        <button class="intro-card" id="open-letter" aria-label="Open letter">
+          <img src="envelope.png" alt="Closed envelope" />
+          <h1>letter for my baby girl</h1>
+          <span class="hint">click to open</span>
+        </button>
+      </section>
+
+      <section class="page page-two" id="page-two" aria-hidden="true">
+        <div class="envelope-stage">
+          <img src="open-envelope.png" alt="Open envelope" class="open-envelope" />
+          <div class="letter-panel">
+            <div id="lines" class="lines">
+              <div class="cat-row" id="cat-row" aria-hidden="true">
+                <img src="cat_heart.gif" alt="Cute cat" class="cat" />
+                <img src="cat_heart_grey.gif" alt="Cute cat" class="cat grey" />
+              </div>
+            </div>
+            <div class="choices" id="choices">
+              <button class="btn yes" id="yes">Yes</button>
+              <button class="btn no" id="no">No</button>
+            </div>
+          </div>
+
+          <div class="scene">
+            <div class="coffee" id="coffee" aria-hidden="true">
+              <div class="hands"></div>
+              <div class="cup"></div>
+              <div class="steam s1"></div>
+              <div class="steam s2"></div>
+              <div class="steam s3"></div>
+            </div>
+            <div class="heart-pop" id="heart-pop" aria-hidden="true"></div>
+            <img src="flame.svg" alt="Flame" class="flame" id="flame" aria-hidden="true" />
+            <div class="hearts" id="hearts" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="yes-screen" id="yes-screen" aria-hidden="true">
+          <div class="confetti" id="confetti" aria-hidden="true"></div>
+          <h2>YAYYY!!</h2>
+          <p class="hint">click to see where I am taking you out</p>
+          <div class="countdown" id="countdown" aria-live="polite">
+            <span class="countdown-label">Reveal in</span>
+            <span class="countdown-number" id="countdown-number"></span>
+          </div>
+          <div class="finale" id="finale">
+            <p>we're going to Tokyo Sushi!!!</p>
+            <div class="sushi-grid">
+              <img src="sushi.jpg" alt="Tokyo Sushi" />
+              <img src="unnamed.webp" alt="Tokyo Sushi" />
+              <img src="unnamed (1).webp" alt="Tokyo Sushi" />
+              <img src="unnamed (2).webp" alt="Tokyo Sushi" />
+              <img src="unnamed (3).webp" alt="Tokyo Sushi" />
+              <img src="unnamed (4).webp" alt="Tokyo Sushi" />
+              <img src="unnamed (5).webp" alt="Tokyo Sushi" />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
