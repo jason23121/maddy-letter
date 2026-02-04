@@ -11,6 +11,7 @@ const countdown = document.getElementById("countdown");
 const confetti = document.getElementById("confetti");
 const sushiImages = document.querySelectorAll(".sushi-grid img");
 const countdownNumber = document.getElementById("countdown-number");
+const bgMusic = document.getElementById("bg-music");
 
 const coffee = document.getElementById("coffee");
 const heartPop = document.getElementById("heart-pop");
@@ -43,6 +44,23 @@ let letterActive = false;
 let noBase = null;
 let revealArmed = false;
 let revealRunning = false;
+let musicStarted = false;
+
+function startMusic() {
+  if (!bgMusic || musicStarted) return;
+  const playPromise = bgMusic.play();
+  if (!playPromise || typeof playPromise.then !== "function") {
+    musicStarted = true;
+    return;
+  }
+  playPromise
+    .then(() => {
+      musicStarted = true;
+    })
+    .catch(() => {
+      musicStarted = false;
+    });
+}
 
 function showEffect(element, className, duration) {
   if (!element) return;
@@ -55,6 +73,7 @@ function showEffect(element, className, duration) {
 function openSequence() {
   if (openLetter.classList.contains("opening")) return;
   openLetter.classList.add("opening");
+  startMusic();
 
   setTimeout(() => {
     pageOne.style.display = "none";
@@ -71,6 +90,10 @@ openLetter.addEventListener("keydown", (event) => {
     event.preventDefault();
     openSequence();
   }
+});
+
+["click", "keydown", "touchstart"].forEach((eventName) => {
+  document.addEventListener(eventName, startMusic);
 });
 
 function showNextLine() {
